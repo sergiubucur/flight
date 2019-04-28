@@ -6,6 +6,7 @@ import Constants from "../Constants";
 const WorldHalfSize = Constants.WorldSize / 2;
 const CameraOffset = new THREE.Vector3(0, 2.5, 5);
 const SpaceshipColor = new THREE.Color(0x0080ff);
+const RotationOffsetMax = 15;
 
 export default class Spaceship {
 	camera = null;
@@ -21,6 +22,8 @@ export default class Spaceship {
 	acceleration = 0;
 	rotationX = 0;
 	rotationY = 0;
+	meshRotationXOffset = 0;
+	meshRotationZOffset = 0;
 
 	constructor(camera, inputTracker, logger, world) {
 		this.camera = camera;
@@ -43,6 +46,8 @@ export default class Spaceship {
 		this.acceleration = 0;
 		this.rotationX = 0;
 		this.rotationY = 0;
+		this.meshRotationXOffset = 0;
+		this.meshRotationZOffset = 0;
 
 		this.updatePosition(new THREE.Vector3(0, 10, 0));
 	}
@@ -113,21 +118,30 @@ export default class Spaceship {
 
 		if (this.inputTracker.keysPressed[Keybinds.Up]) {
 			this.rotationX -= turnSpeed * 0.5;
+			this.meshRotationXOffset -= 0.1;
 		}
 
 		if (this.inputTracker.keysPressed[Keybinds.Down]) {
 			this.rotationX += turnSpeed * 0.5;
+			this.meshRotationXOffset += 0.1;
 		}
 
 		if (this.inputTracker.keysPressed[Keybinds.Left]) {
 			this.rotationY += turnSpeed;
+			this.meshRotationZOffset += 0.1;
 		}
 
 		if (this.inputTracker.keysPressed[Keybinds.Right]) {
 			this.rotationY -= turnSpeed;
+			this.meshRotationZOffset -= 0.1;
 		}
 
 		this.rotationX = THREE.Math.clamp(this.rotationX, -30, 30);
+
+		this.meshRotationXOffset *= 0.99;
+		this.meshRotationZOffset *= 0.99;
+		this.meshRotationXOffset = THREE.Math.clamp(this.meshRotationXOffset, -RotationOffsetMax, RotationOffsetMax);
+		this.meshRotationZOffset = THREE.Math.clamp(this.meshRotationZOffset, -RotationOffsetMax, RotationOffsetMax);
 	}
 
 	updatePosition(newPosition) {
@@ -145,7 +159,13 @@ export default class Spaceship {
 
 		this.position.copy(newPosition);
 		this.mesh.position.copy(this.position);
-		this.mesh.rotation.set(THREE.Math.degToRad(this.rotationX), THREE.Math.degToRad(this.rotationY), 0, "ZYX");
+
+		this.mesh.rotation.set(
+			THREE.Math.degToRad(this.rotationX + this.meshRotationXOffset),
+			THREE.Math.degToRad(this.rotationY),
+			THREE.Math.degToRad(this.meshRotationZOffset * 2),
+			"YXZ");
+
 		this.pointLight.position.copy(this.position);
 		this.updateCameraPosition();
 	}
