@@ -99,7 +99,7 @@ export default class Spaceship {
 		this.logger.logNumber("rotationX", this.rotationX);
 		this.logger.logNumber("rotationY", this.rotationY);
 		this.logger.logNumber("velocity", this.velocity);
-		this.logger.logNumber("acceleration", this.acceleration);
+		this.logger.logNumber("acceleration", this.acceleration, 5);
 	}
 
 	updateLight() {

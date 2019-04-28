@@ -25,11 +25,11 @@ export default class Logger {
 		this.logItems.push(message);
 	}
 
-	logNumber(name, number) {
-		this.logItems.push(`${name}: ${number.toFixed(2)}`);
+	logNumber(name, number, digits = 2) {
+		this.logItems.push(`${name}: ${number.toFixed(digits)}`);
 	}
 
-	logVector3(name, vector3) {
-		this.logItems.push(`${name}: ${vector3.x.toFixed(2)} ${vector3.y.toFixed(2)} ${vector3.z.toFixed(2)}`);
+	logVector3(name, vector3, digits = 2) {
+		this.logItems.push(`${name}: ${vector3.x.toFixed(digits)} ${vector3.y.toFixed(digits)} ${vector3.z.toFixed(digits)}`);
 	}
 }
