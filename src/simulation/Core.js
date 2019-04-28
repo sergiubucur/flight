@@ -84,6 +84,11 @@ export default class Core {
 
 	update() {
 		this.logger.update();
+
+		this.logger.log("W - acceleration");
+		this.logger.log("←↑↓→ - steering");
+		this.logger.log();
+
 		this.world.update();
 		// this.firstPersonControls.update();
 		this.spaceship.update();

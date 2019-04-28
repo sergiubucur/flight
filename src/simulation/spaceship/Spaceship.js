@@ -81,11 +81,13 @@ export default class Spaceship {
 		const newPosition = this.position.clone().add(velocity);
 		this.updatePosition(newPosition);
 
-		this.logger.logVector3("position", this.position);
-		this.logger.logNumber("rotationX", this.rotationX);
-		this.logger.logNumber("rotationY", this.rotationY);
-		this.logger.logNumber("velocity", this.velocity);
-		this.logger.logNumber("acceleration", this.acceleration, 5);
+		this.logger.log(`${(this.velocity * 5400).toFixed(0)} km/h`);
+
+		// this.logger.logVector3("position", this.position);
+		// this.logger.logNumber("rotationX", this.rotationX);
+		// this.logger.logNumber("rotationY", this.rotationY);
+		// this.logger.logNumber("velocity", this.velocity);
+		// this.logger.logNumber("acceleration", this.acceleration, 5);
 	}
 
 	updateRotation() {

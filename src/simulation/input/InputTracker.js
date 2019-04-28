@@ -3,6 +3,7 @@ export default class InputTracker {
 	keysPressed = {};
 	movementX = 0;
 	movementY = 0;
+	usePointerLock = false;
 
 	constructor(logger) {
 		this.logger = logger;
@@ -21,20 +22,22 @@ export default class InputTracker {
 			this.keysPressed[e.keyCode] = false;
 		});
 
-		document.addEventListener("mousedown", (e) => {
-			if (e.button === 2 && document.pointerLockElement === null) {
-				document.body.requestPointerLock();
-			}
-		});
+		if (this.usePointerLock) {
+			document.addEventListener("mousedown", (e) => {
+				if (e.button === 2 && document.pointerLockElement === null) {
+					document.body.requestPointerLock();
+				}
+			});
 
-		document.addEventListener("mousemove", (e) => {
-			if (document.pointerLockElement === null) {
-				return;
-			}
+			document.addEventListener("mousemove", (e) => {
+				if (document.pointerLockElement === null) {
+					return;
+				}
 
-			this.movementX = e.movementX;
-			this.movementY = e.movementY;
-		});
+				this.movementX = e.movementX;
+				this.movementY = e.movementY;
+			});
+		}
 	}
 
 	resetMovement() {
@@ -43,9 +46,11 @@ export default class InputTracker {
 	}
 
 	update() {
-		if (document.pointerLockElement === null) {
-			this.logger.log();
-			this.logger.log("right-click for pointer lock");
+		if (this.usePointerLock) {
+			if (document.pointerLockElement === null) {
+				this.logger.log();
+				this.logger.log("right-click for pointer lock");
+			}
 		}
 
 		this.resetMovement();
