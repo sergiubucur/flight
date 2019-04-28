@@ -12,6 +12,8 @@ export default class FirstPersonControls {
 	rotationX = 0;
 	rotationY = 0;
 	speed = 0.25;
+	horizontalSensitivity = 0.125;
+	verticalSensitivity = 0.125;
 
 	constructor(camera, inputTracker, logger) {
 		this.camera = camera;
@@ -35,6 +37,8 @@ export default class FirstPersonControls {
 		this.logger.logVector3("velocity", velocity);
 		this.logger.logVector3("forward", this.forward);
 		this.logger.logVector3("right", this.right);
+		this.logger.logNumber("rotationX", this.rotationX);
+		this.logger.logNumber("rotationY", this.rotationY);
 	}
 
 	getVelocity() {
@@ -62,33 +66,21 @@ export default class FirstPersonControls {
 	}
 
 	updateRotation() {
-		if (this.inputTracker.keysPressed[Keybinds.Up]) {
-			this.rotationX -= 0.01;
-		}
+		this.rotationX -= this.inputTracker.movementY * this.verticalSensitivity;
+		this.rotationX = THREE.Math.clamp(this.rotationX, -80, 80);
+		this.rotationY -= this.inputTracker.movementX * this.horizontalSensitivity;
 
-		if (this.inputTracker.keysPressed[Keybinds.Down]) {
-			this.rotationX += 0.01;
-		}
-
-		if (this.inputTracker.keysPressed[Keybinds.Left]) {
-			this.rotationY += 0.01;
-		}
-
-		if (this.inputTracker.keysPressed[Keybinds.Right]) {
-			this.rotationY -= 0.01;
-		}
-
-		const rotation = new THREE.Euler(this.rotationX, this.rotationY, 0, "XYZ");
+		const rotation = new THREE.Euler(THREE.Math.degToRad(this.rotationX), THREE.Math.degToRad(this.rotationY), 0, "ZYX");
 
 		this.forward.set(0, 0, -1);
 		this.forward.applyEuler(rotation);
 
-		rotation.set(0, this.rotationY, 0, "XYZ");
+		rotation.set(0, THREE.Math.degToRad(this.rotationY), 0, "ZYX");
 
 		this.right.set(1, 0, 0);
 		this.right.applyEuler(rotation);
 
-		this.camera.lookAt(this.forward.clone().add(this.position));
+		this.camera.lookAt(this.position.clone().add(this.forward));
 	}
 
 	updatePosition(newPosition) {

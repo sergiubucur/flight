@@ -27,7 +27,7 @@ export default class Core {
 	}
 
 	initInputTracker() {
-		this.inputTracker = new InputTracker();
+		this.inputTracker = new InputTracker(this.logger);
 		this.inputTracker.init();
 	}
 
@@ -60,6 +60,7 @@ export default class Core {
 	update() {
 		this.logger.update();
 		this.firstPersonControls.update();
+		this.inputTracker.update();
 
 		// this.world.groundMesh.rotation.y += 0.01;
 	}
