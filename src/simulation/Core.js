@@ -4,7 +4,8 @@ import AssetLibrary from "./asset-library/AssetLibrary";
 import Logger from "./logger/Logger";
 import World from "./world/World";
 import InputTracker from "./input/InputTracker";
-import FirstPersonControls from "./camera/FirstPersonControls";
+// import FirstPersonControls from "./camera/FirstPersonControls";
+import Spaceship from "./spaceship/Spaceship";
 
 export default class Core {
 	assetLibrary = null;
@@ -22,6 +23,7 @@ export default class Core {
 			this.initInputTracker();
 			this.initCamera();
 			this.initWorld();
+			this.initSpaceship();
 			this.initRenderer();
 
 			this.removeLoadingBar();
@@ -42,13 +44,20 @@ export default class Core {
 	initCamera() {
 		this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000);
 
-		this.firstPersonControls = new FirstPersonControls(this.camera, this.inputTracker, this.logger);
-		this.firstPersonControls.init();
+		// this.firstPersonControls = new FirstPersonControls(this.camera, this.inputTracker, this.logger);
+		// this.firstPersonControls.init();
 	}
 
 	initWorld() {
 		this.world = new World(this.assetLibrary);
 		this.world.init();
+	}
+
+	initSpaceship() {
+		this.spaceship = new Spaceship(this.logger, this.inputTracker, this.camera);
+		this.spaceship.init();
+
+		this.world.scene.add(this.spaceship.mesh);
 	}
 
 	initRenderer() {
@@ -73,7 +82,8 @@ export default class Core {
 	update() {
 		this.logger.update();
 		this.world.update();
-		this.firstPersonControls.update();
+		// this.firstPersonControls.update();
+		this.spaceship.update();
 		this.inputTracker.update();
 	}
 
