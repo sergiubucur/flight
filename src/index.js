@@ -1,12 +1,33 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import * as THREE from "three";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+var camera, scene, renderer;
+var geometry, material, mesh;
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+init();
+animate();
+
+function init() {
+	camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
+	camera.position.z = 1;
+
+	scene = new THREE.Scene();
+
+	geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+	material = new THREE.MeshNormalMaterial();
+
+	mesh = new THREE.Mesh(geometry, material);
+	scene.add(mesh);
+
+	renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	document.body.appendChild(renderer.domElement);
+}
+
+function animate() {
+	requestAnimationFrame(animate);
+
+	mesh.rotation.x += 0.01;
+	mesh.rotation.y += 0.02;
+
+	renderer.render(scene, camera);
+}
