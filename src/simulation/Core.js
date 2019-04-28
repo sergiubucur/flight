@@ -1,20 +1,29 @@
 import * as THREE from "three";
 
+import Logger from "./logger/Logger";
 import World from "./world/World";
 import InputTracker from "./input/InputTracker";
 import FirstPersonControls from "./camera/FirstPersonControls";
 
 export default class Core {
+	logger = null;
+	inputTracker = null;
 	camera = null;
 	firstPersonControls = null;
 	world = null;
 	renderer = null;
 
 	init() {
+		this.initLogger();
 		this.initInputTracker();
 		this.initCamera();
 		this.initWorld();
 		this.initRenderer();
+	}
+
+	initLogger() {
+		this.logger = new Logger();
+		this.logger.init();
 	}
 
 	initInputTracker() {
@@ -25,7 +34,7 @@ export default class Core {
 	initCamera() {
 		this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000);
 
-		this.firstPersonControls = new FirstPersonControls(this.camera, this.inputTracker);
+		this.firstPersonControls = new FirstPersonControls(this.camera, this.inputTracker, this.logger);
 		this.firstPersonControls.init();
 	}
 
@@ -49,6 +58,7 @@ export default class Core {
 	}
 
 	update() {
+		this.logger.update();
 		this.firstPersonControls.update();
 
 		// this.world.groundMesh.rotation.y += 0.01;

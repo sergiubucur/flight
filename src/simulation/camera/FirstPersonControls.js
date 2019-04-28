@@ -4,6 +4,8 @@ import Keybinds from "../input/Keybinds";
 
 export default class FirstPersonControls {
 	camera = null;
+	inputTracker = null;
+	logger = null;
 	position = new THREE.Vector3(0, 5, 15);
 	forward = new THREE.Vector3(0, 0, -1);
 	right = new THREE.Vector3(1, 0, 0);
@@ -11,9 +13,10 @@ export default class FirstPersonControls {
 	rotationY = 0;
 	speed = 0.25;
 
-	constructor(camera, inputTracker) {
+	constructor(camera, inputTracker, logger) {
 		this.camera = camera;
 		this.inputTracker = inputTracker;
+		this.logger = logger;
 	}
 
 	init() {
@@ -27,6 +30,11 @@ export default class FirstPersonControls {
 
 		const newPosition = this.position.clone().add(velocity);
 		this.updatePosition(newPosition);
+
+		this.logger.logVector3("position", this.position);
+		this.logger.logVector3("velocity", velocity);
+		this.logger.logVector3("forward", this.forward);
+		this.logger.logVector3("right", this.right);
 	}
 
 	getVelocity() {
