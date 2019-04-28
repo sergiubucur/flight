@@ -5,6 +5,8 @@ import Constants from "../Constants";
 const DirLightVector1 = new THREE.Vector3(-1.33, -0.46, 1.2);
 const DirLightVector2 = new THREE.Vector3(1.77, 0.78, -1.45);
 
+const WorldHalfSize = Constants.WorldSize / 2;
+
 export default class World {
 	assetLibrary = null;
 	scene = null;
@@ -14,8 +16,9 @@ export default class World {
 	heightmap = null;
 	lightRotation = 0;
 
-	constructor(assetLibrary) {
+	constructor(assetLibrary, logger) {
 		this.assetLibrary = assetLibrary;
+		this.logger = logger;
 	}
 
 	init() {
@@ -128,5 +131,26 @@ export default class World {
 
 	getHeight(x, y) {
 		return this.heightmap[Constants.WorldSize - y][x];
+	}
+
+	getInterpolatedHeight(position) {
+		const x = position.x + WorldHalfSize;
+		const y = position.z + WorldHalfSize;
+
+		const x0 = Math.floor(x);
+		const y0 = Math.floor(y);
+
+		const h00 = this.heightmap[y0][x0];
+		const h01 = this.heightmap[y0][x0 + 1];
+		const h11 = this.heightmap[y0 + 1][x0 + 1];
+		const h10 = this.heightmap[y0 + 1][x0];
+
+		const dx = x - x0;
+		const dy = y - y0;
+
+		const a1 = (1 - dx) * h00 + dx * h01;
+		const a2 = (1 - dx) * h10 + dx * h11;
+
+		return (1 - dy) * a1 + dy * a2;
 	}
 }

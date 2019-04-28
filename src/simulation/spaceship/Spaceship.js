@@ -4,39 +4,58 @@ import Keybinds from "../input/Keybinds";
 import Constants from "../Constants";
 
 const WorldHalfSize = Constants.WorldSize / 2;
+const CameraOffset = new THREE.Vector3(0, 2.5, 5);
+const SpaceshipColor = new THREE.Color(0x0080ff);
 
 export default class Spaceship {
-	logger = null;
-	inputTracker = null;
 	camera = null;
+	inputTracker = null;
+	logger = null;
+	world = null;
+
 	mesh = null;
-	position = null;
-	velocity = 0.05;
+	pointLight = null;
+	lightCounter = 0;
+	position = new THREE.Vector3(0, 0, 0);
+	velocity = 0;
 	acceleration = 0;
 	rotationX = 0;
 	rotationY = 0;
-	cameraOffset = new THREE.Vector3(0, 2.5, 5);
 
-	constructor(logger, inputTracker, camera) {
-		this.logger = logger;
-		this.inputTracker = inputTracker;
+	constructor(camera, inputTracker, logger, world) {
 		this.camera = camera;
+		this.inputTracker = inputTracker;
+		this.logger = logger;
+		this.world = world;
 	}
 
 	init() {
-		this.position = new THREE.Vector3(0, 10, 0);
-		this.updateCameraPosition();
-
 		this.mesh = this.getMesh();
-		this.mesh.position.copy(this.position);
+
+		this.pointLight = new THREE.PointLight(SpaceshipColor, 1, 5);
+		this.world.scene.add(this.pointLight);
+
+		this.reset();
+	}
+
+	reset() {
+		this.velocity = 0.05;
+		this.acceleration = 0;
+		this.rotationX = 0;
+		this.rotationY = 0;
+
+		this.updatePosition(new THREE.Vector3(0, 10, 0));
 	}
 
 	getMesh() {
 		const geometry = new THREE.ConeBufferGeometry();
 		geometry.rotateX(THREE.Math.degToRad(-90));
-		geometry.scale(1, 0.1, 2);
+		geometry.scale(0.75, 0.1, 2);
 
 		const material = new THREE.MeshPhongMaterial();
+		material.emissive.set(SpaceshipColor);
+		material.emissiveIntensity = 0.1;
+
 		const mesh = new THREE.Mesh(geometry, material);
 
 		return mesh;
@@ -44,7 +63,7 @@ export default class Spaceship {
 
 	updateCameraPosition() {
 		const rotation = new THREE.Euler(THREE.Math.degToRad(this.rotationX), THREE.Math.degToRad(this.rotationY), 0, "ZYX");
-		const offset = this.cameraOffset.clone().applyEuler(rotation);
+		const offset = CameraOffset.clone().applyEuler(rotation);
 
 		this.camera.position.copy(this.position).add(offset);
 		this.camera.lookAt(this.position);
@@ -69,6 +88,8 @@ export default class Spaceship {
 		const newPosition = this.position.clone().add(velocity);
 		this.updatePosition(newPosition);
 
+		this.updateLight();
+
 		this.logger.logVector3("position", this.position);
 		this.logger.logNumber("rotationX", this.rotationX);
 		this.logger.logNumber("rotationY", this.rotationY);
@@ -76,8 +97,14 @@ export default class Spaceship {
 		this.logger.logNumber("acceleration", this.acceleration);
 	}
 
+	updateLight() {
+		this.lightCounter += 0.1;
+
+		this.pointLight.intensity = 0.5 + 0.5 * Math.sin(this.lightCounter);
+	}
+
 	updateRotation() {
-		const turnSpeed = this.velocity * 1.5;
+		const turnSpeed = this.velocity * 2;
 
 		if (this.inputTracker.keysPressed[Keybinds.Up]) {
 			this.rotationX -= turnSpeed * 0.5;
@@ -99,13 +126,22 @@ export default class Spaceship {
 	}
 
 	updatePosition(newPosition) {
-		newPosition.x = THREE.Math.clamp(newPosition.x, -WorldHalfSize, WorldHalfSize);
-		newPosition.y = THREE.Math.clamp(newPosition.y, -WorldHalfSize, WorldHalfSize);
-		newPosition.z = THREE.Math.clamp(newPosition.z, -WorldHalfSize, WorldHalfSize);
+		if (newPosition.x < -WorldHalfSize || newPosition.x > WorldHalfSize - 0.01
+			|| newPosition.z < -WorldHalfSize || newPosition.z > WorldHalfSize - 0.01) {
+			this.reset();
+			return;
+		}
+
+		const terrainHeight = this.world.getInterpolatedHeight(newPosition);
+		if (newPosition.y <= terrainHeight) {
+			this.reset();
+			return;
+		}
 
 		this.position.copy(newPosition);
 		this.mesh.position.copy(this.position);
 		this.mesh.rotation.set(THREE.Math.degToRad(this.rotationX), THREE.Math.degToRad(this.rotationY), 0, "ZYX");
+		this.pointLight.position.copy(this.position);
 		this.updateCameraPosition();
 	}
 }

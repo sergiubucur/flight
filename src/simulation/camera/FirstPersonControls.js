@@ -9,6 +9,8 @@ export default class FirstPersonControls {
 	camera = null;
 	inputTracker = null;
 	logger = null;
+	world = null;
+
 	position = new THREE.Vector3(0, 10, 0);
 	forward = new THREE.Vector3(0, 0, -1);
 	right = new THREE.Vector3(1, 0, 0);
@@ -18,10 +20,11 @@ export default class FirstPersonControls {
 	horizontalSensitivity = 0.125;
 	verticalSensitivity = 0.125;
 
-	constructor(camera, inputTracker, logger) {
+	constructor(camera, inputTracker, logger, world) {
 		this.camera = camera;
 		this.inputTracker = inputTracker;
 		this.logger = logger;
+		this.world = world;
 	}
 
 	init() {
@@ -87,9 +90,12 @@ export default class FirstPersonControls {
 	}
 
 	updatePosition(newPosition) {
-		newPosition.x = THREE.Math.clamp(newPosition.x, -WorldHalfSize, WorldHalfSize);
-		newPosition.y = THREE.Math.clamp(newPosition.y, -WorldHalfSize, WorldHalfSize);
-		newPosition.z = THREE.Math.clamp(newPosition.z, -WorldHalfSize, WorldHalfSize);
+		newPosition.x = THREE.Math.clamp(newPosition.x, -WorldHalfSize, WorldHalfSize - 0.01);
+		newPosition.z = THREE.Math.clamp(newPosition.z, -WorldHalfSize, WorldHalfSize - 0.01);
+
+		const terrainHeight = this.world.getInterpolatedHeight(newPosition) + 0.5;
+
+		newPosition.y = THREE.Math.clamp(newPosition.y, terrainHeight, WorldHalfSize - 0.01);
 
 		this.position.copy(newPosition);
 		this.camera.position.copy(this.position);
