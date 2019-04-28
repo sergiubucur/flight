@@ -109,11 +109,6 @@ export default class Spaceship {
 	}
 
 	updateRotation() {
-		// const turnSpeed = this.velocity * 0.1;
-
-		// this.rotationX -= this.inputTracker.movementY * turnSpeed * 0.5;
-		// this.rotationY -= this.inputTracker.movementX * turnSpeed;
-
 		const turnSpeed = this.velocity * 2;
 
 		if (this.inputTracker.keysPressed[Keybinds.Up]) {
