@@ -6,7 +6,7 @@ export default class FirstPersonControls {
 	camera = null;
 	inputTracker = null;
 	logger = null;
-	position = new THREE.Vector3(0, 5, 15);
+	position = new THREE.Vector3(0, 5, 0);
 	forward = new THREE.Vector3(0, 0, -1);
 	right = new THREE.Vector3(1, 0, 0);
 	rotationX = 0;
@@ -84,6 +84,10 @@ export default class FirstPersonControls {
 	}
 
 	updatePosition(newPosition) {
+		newPosition.x = THREE.Math.clamp(newPosition.x, -64, 64);
+		newPosition.y = THREE.Math.clamp(newPosition.y, -64, 64);
+		newPosition.z = THREE.Math.clamp(newPosition.z, -64, 64);
+
 		this.position.copy(newPosition);
 		this.camera.position.copy(this.position);
 	}
