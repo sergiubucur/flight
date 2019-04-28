@@ -57,7 +57,7 @@ export default class Core {
 	}
 
 	initSpaceship() {
-		this.spaceship = new Spaceship(this.camera, this.inputTracker, this.logger, this.world);
+		this.spaceship = new Spaceship(this.camera, this.inputTracker, this.logger, this.world, this.assetLibrary);
 		this.spaceship.init();
 
 		this.world.scene.add(this.spaceship.mesh);

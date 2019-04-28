@@ -1,11 +1,15 @@
 import * as THREE from "three";
+import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 
 export default class AssetLibrary {
 	assets = {
-		"heightmap": { type: "texture", path: "assets/textures/heightmap.png" }
+		"heightmap": { type: "texture", path: "assets/textures/heightmap.png" },
+		"spaceship": { type: "mesh", path: "assets/meshes/spaceship.obj", materialPath: "assets/meshes/spaceship.mtl" }
 	};
 
 	textures = {};
+	meshes = {};
 
 	assetsLoaded = 0;
 	assetCount = 0;
@@ -21,20 +25,35 @@ export default class AssetLibrary {
 
 				switch (asset.type) {
 					case "texture":
-						this.loadTexture(name, asset.path);
+						this.loadTexture(name, asset);
+						break;
+
+					case "mesh":
+						this.loadMesh(name, asset);
 						break;
 
 					default:
-						break;
+						throw new Error("invalid asset type");
 				}
 			});
 		});
 	}
 
-	loadTexture(name, path) {
-		const texture = new THREE.TextureLoader().load(path, () => {
+	loadTexture(name, asset) {
+		const texture = new THREE.TextureLoader().load(asset.path, () => {
 			this.textures[name] = texture;
 			this.onAssetLoaded();
+		});
+	}
+
+	loadMesh(name, asset) {
+		new MTLLoader().load(asset.materialPath, (materials) => {
+			materials.preload();
+
+			new OBJLoader().setMaterials(materials).load(asset.path, (mesh) => {
+				this.meshes[name] = mesh;
+				this.onAssetLoaded();
+			});
 		});
 	}
 

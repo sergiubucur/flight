@@ -5,7 +5,6 @@ import Constants from "../Constants";
 
 const WorldHalfSize = Constants.WorldSize / 2;
 const CameraOffset = new THREE.Vector3(0, 2.5, 5);
-const SpaceshipColor = new THREE.Color(0x0080ff);
 const RotationOffsetMax = 15;
 
 export default class Spaceship {
@@ -15,8 +14,6 @@ export default class Spaceship {
 	world = null;
 
 	mesh = null;
-	pointLight = null;
-	lightCounter = 0;
 	position = new THREE.Vector3(0, 0, 0);
 	velocity = 0;
 	acceleration = 0;
@@ -25,18 +22,16 @@ export default class Spaceship {
 	meshRotationXOffset = 0;
 	meshRotationZOffset = 0;
 
-	constructor(camera, inputTracker, logger, world) {
+	constructor(camera, inputTracker, logger, world, assetLibrary) {
 		this.camera = camera;
 		this.inputTracker = inputTracker;
 		this.logger = logger;
 		this.world = world;
+		this.assetLibrary = assetLibrary;
 	}
 
 	init() {
 		this.mesh = this.getMesh();
-
-		this.pointLight = new THREE.PointLight(SpaceshipColor, 1, 5);
-		this.world.scene.add(this.pointLight);
 
 		this.reset();
 	}
@@ -53,15 +48,8 @@ export default class Spaceship {
 	}
 
 	getMesh() {
-		const geometry = new THREE.ConeBufferGeometry();
-		geometry.rotateX(THREE.Math.degToRad(-90));
-		geometry.scale(0.75, 0.1, 2);
-
-		const material = new THREE.MeshPhongMaterial();
-		material.emissive.set(SpaceshipColor);
-		material.emissiveIntensity = 0.1;
-
-		const mesh = new THREE.Mesh(geometry, material);
+		const mesh = this.assetLibrary.meshes["spaceship"].clone();
+		mesh.scale.set(0.1, 0.1, 0.1);
 
 		return mesh;
 	}
@@ -93,19 +81,11 @@ export default class Spaceship {
 		const newPosition = this.position.clone().add(velocity);
 		this.updatePosition(newPosition);
 
-		this.updateLight();
-
 		this.logger.logVector3("position", this.position);
 		this.logger.logNumber("rotationX", this.rotationX);
 		this.logger.logNumber("rotationY", this.rotationY);
 		this.logger.logNumber("velocity", this.velocity);
 		this.logger.logNumber("acceleration", this.acceleration, 5);
-	}
-
-	updateLight() {
-		this.lightCounter += 0.1;
-
-		this.pointLight.intensity = 0.5 + 0.5 * Math.sin(this.lightCounter);
 	}
 
 	updateRotation() {
@@ -161,7 +141,6 @@ export default class Spaceship {
 			THREE.Math.degToRad(this.meshRotationZOffset * 2),
 			"YXZ");
 
-		this.pointLight.position.copy(this.position);
 		this.updateCameraPosition();
 	}
 }
