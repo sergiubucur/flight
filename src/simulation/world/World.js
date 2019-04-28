@@ -90,6 +90,7 @@ export default class World {
 			}
 		}
 
+		// geometry.mergeVertices();
 		geometry.computeVertexNormals();
 
 		const bufferGeometry = new THREE.BufferGeometry().fromGeometry(geometry);
