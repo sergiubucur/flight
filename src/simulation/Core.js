@@ -1,11 +1,13 @@
 import * as THREE from "three";
 
+import AssetLibrary from "./asset-library/AssetLibrary";
 import Logger from "./logger/Logger";
 import World from "./world/World";
 import InputTracker from "./input/InputTracker";
 import FirstPersonControls from "./camera/FirstPersonControls";
 
 export default class Core {
+	assetLibrary = null;
 	logger = null;
 	inputTracker = null;
 	camera = null;
@@ -14,11 +16,17 @@ export default class Core {
 	renderer = null;
 
 	init() {
-		this.initLogger();
-		this.initInputTracker();
-		this.initCamera();
-		this.initWorld();
-		this.initRenderer();
+		this.assetLibrary = new AssetLibrary();
+		this.assetLibrary.init().then(() => {
+			this.initLogger();
+			this.initInputTracker();
+			this.initCamera();
+			this.initWorld();
+			this.initRenderer();
+
+			this.removeLoadingBar();
+			this.run();
+		});
 	}
 
 	initLogger() {
@@ -39,7 +47,7 @@ export default class Core {
 	}
 
 	initWorld() {
-		this.world = new World();
+		this.world = new World(this.assetLibrary);
 		this.world.init();
 	}
 
@@ -48,6 +56,11 @@ export default class Core {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 
 		document.body.appendChild(this.renderer.domElement);
+	}
+
+	removeLoadingBar() {
+		const element = document.querySelector("body > .loading");
+		document.body.removeChild(element);
 	}
 
 	run() {
@@ -59,10 +72,9 @@ export default class Core {
 
 	update() {
 		this.logger.update();
+		this.world.update();
 		this.firstPersonControls.update();
 		this.inputTracker.update();
-
-		// this.world.groundMesh.rotation.y += 0.01;
 	}
 
 	draw() {
