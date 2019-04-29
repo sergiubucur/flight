@@ -7,7 +7,7 @@ body {
 	color: #fff;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 22px;
-	cursor: none;
+	/*cursor: none;*/
 }
 
 body > .loading {

@@ -51,6 +51,8 @@ export default class Spaceship {
 		const mesh = this.assetLibrary.meshes["spaceship"].clone();
 		mesh.scale.set(0.1, 0.1, 0.1);
 
+		mesh.children[0].material[4].emissive.set(0xffffff);
+
 		return mesh;
 	}
 
