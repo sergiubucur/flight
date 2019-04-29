@@ -174,8 +174,8 @@ export default class World {
 		position.x = this.clipCoordinate(position.x);
 		position.z = this.clipCoordinate(position.z);
 
-		this.logger.logBounds("positionX", position.x);
-		this.logger.logBounds("positionZ", position.z);
+		// this.logger.logBounds("positionX", position.x);
+		// this.logger.logBounds("positionZ", position.z);
 	}
 
 	clipCoordinate(x) {
