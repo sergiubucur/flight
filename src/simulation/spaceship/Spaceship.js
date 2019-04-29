@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
 import Keybinds from "../input/Keybinds";
-import Constants from "../Constants";
+// import Constants from "../Constants";
 
-const WorldHalfSize = Constants.WorldSize / 2;
+// const WorldHalfSize = Constants.WorldSize / 2;
 const CameraOffset = new THREE.Vector3(0, 2.5, 5);
 const RotationOffsetMax = 15;
 const MaxVelocity = 0.55;
@@ -129,17 +129,17 @@ export default class Spaceship {
 	}
 
 	updatePosition(newPosition) {
-		if (newPosition.x < -WorldHalfSize || newPosition.x > WorldHalfSize - 0.01
-			|| newPosition.z < -WorldHalfSize || newPosition.z > WorldHalfSize - 0.01) {
-			this.reset();
-			return;
-		}
+		// if (newPosition.x < -WorldHalfSize || newPosition.x > WorldHalfSize - 0.01
+		// 	|| newPosition.z < -WorldHalfSize || newPosition.z > WorldHalfSize - 0.01) {
+		// 	this.reset();
+		// 	return;
+		// }
 
-		const terrainHeight = this.world.getInterpolatedHeight(newPosition);
-		if (newPosition.y <= terrainHeight) {
-			this.reset();
-			return;
-		}
+		// const terrainHeight = this.world.getInterpolatedHeight(newPosition);
+		// if (newPosition.y <= terrainHeight) {
+		// 	this.reset();
+		// 	return;
+		// }
 
 		this.position.copy(newPosition);
 		this.mesh.position.copy(this.position);

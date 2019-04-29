@@ -26,6 +26,7 @@ export default class World {
 
 		this.scene = new THREE.Scene();
 		this.scene.background = new THREE.Color(0x133351);
+		this.scene.fog = new THREE.Fog(0x133351, 64, 128);
 
 		this.dirLight1 = new THREE.DirectionalLight(0xfff0e0);
 		this.dirLight1.position.copy(DirLightVector1).normalize();
@@ -37,6 +38,32 @@ export default class World {
 
 		this.groundMesh = this.getGroundMesh();
 		this.scene.add(this.groundMesh);
+
+		// for (let x = -1; x < 2; x++) {
+		// 	for (let y = -1; y < 2; y++) {
+		// 		if (x === 0 && y === 0) {
+		// 			continue;
+		// 		}
+
+		// 		const mesh = this.groundMesh.clone();
+		// 		mesh.position.set(x * Constants.WorldSize, 0, y * Constants.WorldSize);
+
+		// 		this.scene.add(mesh);
+		// 	}
+		// }
+
+		// for (let x = -4; x < 5; x++) {
+		// 	for (let y = -4; y < 5; y++) {
+		// 		if (x !== -4 && x !== 4 && y !== -4 && y !== 4) {
+		// 			continue;
+		// 		}
+
+		// 		const mesh = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshPhongMaterial());
+		// 		mesh.position.set(x * 16, 17, y * 16);
+
+		// 		this.scene.add(mesh);
+		// 	}
+		// }
 	}
 
 	update() {
@@ -60,10 +87,10 @@ export default class World {
 				const h01 = this.getHeight(x, y + 1);
 				const h11 = this.getHeight(x + 1, y + 1);
 
-				const x0 = Constants.WorldUnit * x - Constants.WorldSize / 2;
-				const y0 = -Constants.WorldUnit * y + Constants.WorldSize / 2;
-				const x1 = Constants.WorldUnit * (x + 1) - Constants.WorldSize / 2;
-				const y1 = -Constants.WorldUnit * (y + 1) + Constants.WorldSize / 2;
+				const x0 = Constants.WorldUnit * x - WorldHalfSize;
+				const y0 = -Constants.WorldUnit * y + WorldHalfSize;
+				const x1 = Constants.WorldUnit * (x + 1) - WorldHalfSize;
+				const y1 = -Constants.WorldUnit * (y + 1) + WorldHalfSize;
 
 				geometry.vertices.push(new THREE.Vector3(x0, h00, y0));
 				geometry.vertices.push(new THREE.Vector3(x1, h10, y0));
@@ -130,6 +157,14 @@ export default class World {
 	}
 
 	getHeight(x, y) {
+		if (x === Constants.WorldSize) {
+			x = 0;
+		}
+
+		if (y === Constants.WorldSize) {
+			y = 0;
+		}
+
 		return this.heightmap[Constants.WorldSize - y][x];
 	}
 

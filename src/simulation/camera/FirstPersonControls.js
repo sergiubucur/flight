@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
 import Keybinds from "../input/Keybinds";
-import Constants from "../Constants";
+// import Constants from "../Constants";
 
-const WorldHalfSize = Constants.WorldSize / 2;
+// const WorldHalfSize = Constants.WorldSize / 2;
 
 export default class FirstPersonControls {
 	camera = null;
@@ -11,7 +11,7 @@ export default class FirstPersonControls {
 	logger = null;
 	world = null;
 
-	position = new THREE.Vector3(0, 10, 0);
+	position = new THREE.Vector3(0, 17, 0);
 	forward = new THREE.Vector3(0, 0, -1);
 	right = new THREE.Vector3(1, 0, 0);
 	rotationX = 0;
@@ -90,12 +90,12 @@ export default class FirstPersonControls {
 	}
 
 	updatePosition(newPosition) {
-		newPosition.x = THREE.Math.clamp(newPosition.x, -WorldHalfSize, WorldHalfSize - 0.01);
-		newPosition.z = THREE.Math.clamp(newPosition.z, -WorldHalfSize, WorldHalfSize - 0.01);
+		// newPosition.x = THREE.Math.clamp(newPosition.x, -WorldHalfSize, WorldHalfSize - 0.01);
+		// newPosition.z = THREE.Math.clamp(newPosition.z, -WorldHalfSize, WorldHalfSize - 0.01);
 
-		const terrainHeight = this.world.getInterpolatedHeight(newPosition) + 0.5;
+		// const terrainHeight = this.world.getInterpolatedHeight(newPosition) + 0.5;
 
-		newPosition.y = THREE.Math.clamp(newPosition.y, terrainHeight, WorldHalfSize - 0.01);
+		// newPosition.y = THREE.Math.clamp(newPosition.y, terrainHeight, WorldHalfSize - 0.01);
 
 		this.position.copy(newPosition);
 		this.camera.position.copy(this.position);

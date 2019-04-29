@@ -26,8 +26,8 @@ export default class Core {
 			this.initInputTracker();
 			this.initCamera();
 			this.initWorld();
-			// this.initFirstPersonControls();
-			this.initSpaceship();
+			this.initFirstPersonControls();
+			// this.initSpaceship();
 			this.initRenderer();
 
 			this.removeLoadingBar();
@@ -42,6 +42,7 @@ export default class Core {
 
 	initInputTracker() {
 		this.inputTracker = new InputTracker(this.logger);
+		this.inputTracker.usePointerLock = true;
 		this.inputTracker.init();
 	}
 
@@ -106,8 +107,8 @@ export default class Core {
 		this.logger.log();
 
 		this.world.update();
-		// this.firstPersonControls.update();
-		this.spaceship.update();
+		this.firstPersonControls.update();
+		// this.spaceship.update();
 		this.inputTracker.update();
 	}
 
