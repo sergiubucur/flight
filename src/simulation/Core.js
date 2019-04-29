@@ -7,6 +7,9 @@ import InputTracker from "./input/InputTracker";
 import FirstPersonControls from "./camera/FirstPersonControls";
 import Spaceship from "./spaceship/Spaceship";
 
+const AntiAliasing = true;
+const HalfSizeRendering = true;
+
 export default class Core {
 	assetLibrary = null;
 	logger = null;
@@ -64,10 +67,23 @@ export default class Core {
 	}
 
 	initRenderer() {
-		this.renderer = new THREE.WebGLRenderer({ antialias: true });
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
+		let width = window.innerWidth;
+		let height = window.innerHeight;
+
+		if (HalfSizeRendering) {
+			width /= 2;
+			height /= 2;
+		}
+
+		this.renderer = new THREE.WebGLRenderer({ antialias: AntiAliasing });
+		this.renderer.setSize(width, height);
 
 		document.body.appendChild(this.renderer.domElement);
+
+		if (HalfSizeRendering) {
+			this.renderer.domElement.style.width = width * 2 + "px";
+			this.renderer.domElement.style.height = height * 2 + "px";
+		}
 	}
 
 	removeLoadingBar() {
