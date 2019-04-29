@@ -7,6 +7,7 @@ import World from "./world/World";
 import InputTracker from "./input/InputTracker";
 import FirstPersonControls from "./first-person-controls/FirstPersonControls";
 import Spaceship from "./spaceship/Spaceship";
+import Constants from "./Constants";
 
 const AntiAliasing = true;
 const HalfSizeRendering = true;
@@ -61,7 +62,7 @@ export default class Core {
 	}
 
 	initCamera() {
-		this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000);
+		this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, Constants.DrawDistance);
 	}
 
 	initFirstPersonControls() {

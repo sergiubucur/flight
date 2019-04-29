@@ -4,8 +4,11 @@ import Constants from "../Constants";
 
 const DirLightVector1 = new THREE.Vector3(-1.33, -0.46, 1.2);
 const DirLightVector2 = new THREE.Vector3(1.77, 0.78, -1.45);
-
 const WorldHalfSize = Constants.WorldSize / 2;
+const SkyColor = 0x133351;
+const LightColor = 0xfff0e0;
+const FogStart = Constants.DrawDistance / 2;
+const FogEnd = Constants.DrawDistance;
 
 export default class World {
 	assetLibrary = null;
@@ -24,14 +27,14 @@ export default class World {
 		this.initHeightmap();
 
 		this.scene = new THREE.Scene();
-		this.scene.background = new THREE.Color(0x133351);
-		this.scene.fog = new THREE.Fog(0x133351, 64, 128);
+		this.scene.background = new THREE.Color(SkyColor);
+		this.scene.fog = new THREE.Fog(SkyColor, FogStart, FogEnd);
 
-		this.dirLight1 = new THREE.DirectionalLight(0xfff0e0);
+		this.dirLight1 = new THREE.DirectionalLight(LightColor);
 		this.dirLight1.position.copy(DirLightVector1).normalize();
 		this.scene.add(this.dirLight1);
 
-		this.dirLight2 = new THREE.DirectionalLight(0x133351);
+		this.dirLight2 = new THREE.DirectionalLight(SkyColor);
 		this.dirLight2.position.copy(DirLightVector2).normalize();
 		this.scene.add(this.dirLight2);
 
