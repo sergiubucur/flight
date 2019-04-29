@@ -39,18 +39,18 @@ export default class World {
 		this.groundMesh = this.getGroundMesh();
 		this.scene.add(this.groundMesh);
 
-		// for (let x = -1; x < 2; x++) {
-		// 	for (let y = -1; y < 2; y++) {
-		// 		if (x === 0 && y === 0) {
-		// 			continue;
-		// 		}
+		for (let x = -1; x < 2; x++) {
+			for (let y = -1; y < 2; y++) {
+				if (x === 0 && y === 0) {
+					continue;
+				}
 
-		// 		const mesh = this.groundMesh.clone();
-		// 		mesh.position.set(x * Constants.WorldSize, 0, y * Constants.WorldSize);
+				const mesh = this.groundMesh.clone();
+				mesh.position.set(x * Constants.WorldSize, 0, y * Constants.WorldSize);
 
-		// 		this.scene.add(mesh);
-		// 	}
-		// }
+				this.scene.add(mesh);
+			}
+		}
 
 		// for (let x = -4; x < 5; x++) {
 		// 	for (let y = -4; y < 5; y++) {
