@@ -23,6 +23,8 @@ export default class AssetLibrary {
 			Object.keys(this.assets).forEach(name => {
 				const asset = this.assets[name];
 
+				this.beforeAssetLoad(asset);
+
 				switch (asset.type) {
 					case "texture":
 						this.loadTexture(name, asset);
@@ -42,7 +44,7 @@ export default class AssetLibrary {
 	loadTexture(name, asset) {
 		const texture = new THREE.TextureLoader().load(asset.path, () => {
 			this.textures[name] = texture;
-			this.onAssetLoaded();
+			this.onAssetLoaded(asset);
 		});
 	}
 
@@ -52,15 +54,22 @@ export default class AssetLibrary {
 
 			new OBJLoader().setMaterials(materials).load(asset.path, (mesh) => {
 				this.meshes[name] = mesh;
-				this.onAssetLoaded();
+				this.onAssetLoaded(asset);
 			});
 		});
 	}
 
-	onAssetLoaded() {
+	beforeAssetLoad(asset) {
+		asset.timeToLoad = new Date();
+	}
+
+	onAssetLoaded(asset) {
+		asset.timeToLoad = new Date() - asset.timeToLoad;
 		this.assetsLoaded++;
 
 		if (this.assetsLoaded === this.assetCount) {
+			// console.log("assets loaded", this.assets);
+
 			this.resolve();
 			this.resolve = null;
 		}
