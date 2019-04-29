@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
 import Keybinds from "../input/Keybinds";
-// import Constants from "../Constants";
+import Constants from "../Constants";
 
-// const WorldHalfSize = Constants.WorldSize / 2;
+const WorldHalfSize = Constants.WorldSize / 2;
 const CameraOffset = new THREE.Vector3(0, 2.5, 5);
 const RotationOffsetMax = 15;
 const MaxVelocity = 0.55;
@@ -42,12 +42,13 @@ export default class Spaceship {
 	reset() {
 		this.velocity = 0.05;
 		this.acceleration = 0;
+		this.turboMode = false;
 		this.rotationX = 0;
 		this.rotationY = 0;
 		this.meshRotationXOffset = 0;
 		this.meshRotationZOffset = 0;
 
-		this.updatePosition(new THREE.Vector3(0, 10, 0));
+		this.updatePosition(new THREE.Vector3(0, Constants.WorldMaxHeight + 1, 0));
 	}
 
 	getMesh() {
@@ -74,7 +75,7 @@ export default class Spaceship {
 			this.acceleration += 0.005;
 
 			if (this.inputTracker.keysPressed[Keybinds.Space]) {
-				this.acceleration += 0.005;
+				this.acceleration += 0.025;
 			}
 		}
 
@@ -98,7 +99,7 @@ export default class Spaceship {
 	}
 
 	updateRotation() {
-		const turnSpeed = this.velocity * 2;
+		const turnSpeed = THREE.Math.clamp(this.velocity * 2, 0, MaxVelocity * 2);
 
 		if (this.inputTracker.keysPressed[Keybinds.Up]) {
 			this.rotationX -= turnSpeed * 0.5;
@@ -129,17 +130,27 @@ export default class Spaceship {
 	}
 
 	updatePosition(newPosition) {
-		// if (newPosition.x < -WorldHalfSize || newPosition.x > WorldHalfSize - 0.01
-		// 	|| newPosition.z < -WorldHalfSize || newPosition.z > WorldHalfSize - 0.01) {
-		// 	this.reset();
-		// 	return;
-		// }
+		if (newPosition.x < -WorldHalfSize) {
+			newPosition.x = WorldHalfSize - Constants.Epsilon;
+		} else {
+			if (newPosition.x > WorldHalfSize - Constants.Epsilon) {
+				newPosition.x = -WorldHalfSize;
+			}
+		}
 
-		// const terrainHeight = this.world.getInterpolatedHeight(newPosition);
-		// if (newPosition.y <= terrainHeight) {
-		// 	this.reset();
-		// 	return;
-		// }
+		if (newPosition.z < -WorldHalfSize) {
+			newPosition.z = WorldHalfSize - Constants.Epsilon;
+		} else {
+			if (newPosition.z > WorldHalfSize - Constants.Epsilon) {
+				newPosition.z = -WorldHalfSize;
+			}
+		}
+
+		const terrainHeight = this.world.getInterpolatedHeight(newPosition);
+		if (newPosition.y <= terrainHeight) {
+			this.reset();
+			return;
+		}
 
 		this.position.copy(newPosition);
 		this.mesh.position.copy(this.position);

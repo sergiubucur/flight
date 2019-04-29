@@ -4,12 +4,12 @@ import AssetLibrary from "./asset-library/AssetLibrary";
 import Logger from "./logger/Logger";
 import World from "./world/World";
 import InputTracker from "./input/InputTracker";
-import FirstPersonControls from "./camera/FirstPersonControls";
+import FirstPersonControls from "./first-person-controls/FirstPersonControls";
 import Spaceship from "./spaceship/Spaceship";
 
 const AntiAliasing = true;
 const HalfSizeRendering = true;
-const FirstPersonControlsMode = true;
+const FirstPersonControlsMode = false;
 
 export default class Core {
 	assetLibrary = null;
@@ -111,6 +111,7 @@ export default class Core {
 		if (!FirstPersonControlsMode) {
 			this.logger.log("W - acceleration");
 			this.logger.log("←↑↓→ - steering");
+			this.logger.log("Space - turbo mode");
 			this.logger.log();
 		}
 

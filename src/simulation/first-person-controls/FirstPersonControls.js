@@ -11,7 +11,7 @@ export default class FirstPersonControls {
 	logger = null;
 	world = null;
 
-	position = new THREE.Vector3(0, 17, 0);
+	position = new THREE.Vector3(0, Constants.WorldMaxHeight + 1, 0);
 	forward = new THREE.Vector3(0, 0, -1);
 	right = new THREE.Vector3(1, 0, 0);
 	rotationX = 0;
@@ -91,23 +91,23 @@ export default class FirstPersonControls {
 
 	updatePosition(newPosition) {
 		if (newPosition.x < -WorldHalfSize) {
-			newPosition.x = WorldHalfSize - 0.01;
+			newPosition.x = WorldHalfSize - Constants.Epsilon;
 		} else {
-			if (newPosition.x >= WorldHalfSize - 0.01) {
+			if (newPosition.x > WorldHalfSize - Constants.Epsilon) {
 				newPosition.x = -WorldHalfSize;
 			}
 		}
 
 		if (newPosition.z < -WorldHalfSize) {
-			newPosition.z = WorldHalfSize - 0.01;
+			newPosition.z = WorldHalfSize - Constants.Epsilon;
 		} else {
-			if (newPosition.z >= WorldHalfSize - 0.01) {
+			if (newPosition.z > WorldHalfSize - Constants.Epsilon) {
 				newPosition.z = -WorldHalfSize;
 			}
 		}
 
 		const terrainHeight = this.world.getInterpolatedHeight(newPosition) + 0.5;
-		newPosition.y = THREE.Math.clamp(newPosition.y, terrainHeight, WorldHalfSize - 0.01);
+		newPosition.y = THREE.Math.clamp(newPosition.y, terrainHeight, Infinity);
 
 		this.position.copy(newPosition);
 		this.camera.position.copy(this.position);
