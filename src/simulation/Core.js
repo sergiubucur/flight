@@ -2,6 +2,7 @@ import * as THREE from "three";
 
 import AssetLibrary from "./asset-library/AssetLibrary";
 import Logger from "./logger/Logger";
+import CreditsBox from "./credits-box/CreditsBox";
 import World from "./world/World";
 import InputTracker from "./input/InputTracker";
 import FirstPersonControls from "./first-person-controls/FirstPersonControls";
@@ -19,11 +20,13 @@ export default class Core {
 	firstPersonControls = null;
 	world = null;
 	renderer = null;
+	creditsBox = null;
 
 	init() {
 		this.assetLibrary = new AssetLibrary();
 		this.assetLibrary.init().then(() => {
 			this.initLogger();
+			this.initCreditsBox();
 			this.initInputTracker();
 			this.initCamera();
 			this.initWorld();
@@ -44,6 +47,11 @@ export default class Core {
 	initLogger() {
 		this.logger = new Logger();
 		this.logger.init();
+	}
+
+	initCreditsBox() {
+		this.creditsBox = new CreditsBox();
+		this.creditsBox.init();
 	}
 
 	initInputTracker() {
