@@ -72,6 +72,10 @@ export default class Spaceship {
 
 		if (this.inputTracker.keysPressed[Keybinds.MoveForward]) {
 			this.acceleration += 0.005;
+
+			if (this.inputTracker.keysPressed[Keybinds.Space]) {
+				this.acceleration += 0.005;
+			}
 		}
 
 		this.velocity += this.acceleration;
