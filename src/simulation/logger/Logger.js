@@ -1,6 +1,7 @@
 export default class Logger {
 	domElement = null;
 	logItems = [];
+	bounds = {};
 
 	init() {
 		this.domElement = document.createElement("div");
@@ -31,5 +32,17 @@ export default class Logger {
 
 	logVector3(name, vector3, digits = 2) {
 		this.logItems.push(`${name}: ${vector3.x.toFixed(digits)} ${vector3.y.toFixed(digits)} ${vector3.z.toFixed(digits)}`);
+	}
+
+	logBounds(name, number, digits = 2) {
+		if (!this.bounds[name]) {
+			this.bounds[name] = { min: Infinity, max: -Infinity };
+		}
+
+		const bounds = this.bounds[name];
+		bounds.min = Math.min(number, bounds.min);
+		bounds.max = Math.max(number, bounds.max);
+
+		this.logItems.push(`${name}: ${number.toFixed(digits)} (min: ${bounds.min.toFixed(digits)}, max: ${bounds.max.toFixed(digits)})`);
 	}
 }

@@ -3,8 +3,6 @@ import * as THREE from "three";
 import Keybinds from "../input/Keybinds";
 import Constants from "../Constants";
 
-const WorldHalfSize = Constants.WorldSize / 2;
-
 export default class FirstPersonControls {
 	camera = null;
 	inputTracker = null;
@@ -90,21 +88,7 @@ export default class FirstPersonControls {
 	}
 
 	updatePosition(newPosition) {
-		if (newPosition.x < -WorldHalfSize) {
-			newPosition.x = WorldHalfSize - Constants.Epsilon;
-		} else {
-			if (newPosition.x > WorldHalfSize - Constants.Epsilon) {
-				newPosition.x = -WorldHalfSize;
-			}
-		}
-
-		if (newPosition.z < -WorldHalfSize) {
-			newPosition.z = WorldHalfSize - Constants.Epsilon;
-		} else {
-			if (newPosition.z > WorldHalfSize - Constants.Epsilon) {
-				newPosition.z = -WorldHalfSize;
-			}
-		}
+		this.world.clipCoordinates(newPosition);
 
 		const terrainHeight = this.world.getInterpolatedHeight(newPosition) + 0.5;
 		newPosition.y = THREE.Math.clamp(newPosition.y, terrainHeight, Infinity);

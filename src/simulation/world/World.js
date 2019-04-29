@@ -169,4 +169,26 @@ export default class World {
 
 		return (1 - dy) * a1 + dy * a2;
 	}
+
+	clipCoordinates(position) {
+		position.x = this.clipCoordinate(position.x);
+		position.z = this.clipCoordinate(position.z);
+
+		this.logger.logBounds("positionX", position.x);
+		this.logger.logBounds("positionZ", position.z);
+	}
+
+	clipCoordinate(x) {
+		if (x < -WorldHalfSize) {
+			const delta = Math.abs(-WorldHalfSize - x);
+			return WorldHalfSize - delta;
+		}
+
+		if (x >= WorldHalfSize) {
+			const delta = Math.abs(WorldHalfSize - x);
+			return -WorldHalfSize + delta;
+		}
+
+		return x;
+	}
 }
