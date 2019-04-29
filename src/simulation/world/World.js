@@ -37,8 +37,8 @@ export default class World {
 
 		const groundMesh = this.getGroundMesh();
 
-		for (let x = -1; x < 2; x++) {
-			for (let y = -1; y < 2; y++) {
+		for (let x = -2; x < 3; x++) {
+			for (let y = -2; y < 3; y++) {
 				const mesh = groundMesh.clone();
 				mesh.position.set(x * Constants.WorldSize, 0, y * Constants.WorldSize);
 
