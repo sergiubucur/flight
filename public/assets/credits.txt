@@ -1,0 +1,2 @@
+meshes/spaceship - CC0 - https://opengameart.org/content/space-kit
+textures/heightmap - CC0 - https://opengameart.org/node/46325
