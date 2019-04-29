@@ -9,6 +9,7 @@ import Spaceship from "./spaceship/Spaceship";
 
 const AntiAliasing = true;
 const HalfSizeRendering = true;
+const FirstPersonControlsMode = true;
 
 export default class Core {
 	assetLibrary = null;
@@ -26,8 +27,13 @@ export default class Core {
 			this.initInputTracker();
 			this.initCamera();
 			this.initWorld();
-			this.initFirstPersonControls();
-			// this.initSpaceship();
+
+			if (FirstPersonControlsMode) {
+				this.initFirstPersonControls();
+			} else {
+				this.initSpaceship();
+			}
+
 			this.initRenderer();
 
 			this.removeLoadingBar();
@@ -42,7 +48,7 @@ export default class Core {
 
 	initInputTracker() {
 		this.inputTracker = new InputTracker(this.logger);
-		this.inputTracker.usePointerLock = true;
+		this.inputTracker.usePointerLock = FirstPersonControlsMode;
 		this.inputTracker.init();
 	}
 
@@ -102,13 +108,20 @@ export default class Core {
 	update() {
 		this.logger.update();
 
-		this.logger.log("W - acceleration");
-		this.logger.log("←↑↓→ - steering");
-		this.logger.log();
+		if (!FirstPersonControlsMode) {
+			this.logger.log("W - acceleration");
+			this.logger.log("←↑↓→ - steering");
+			this.logger.log();
+		}
 
 		this.world.update();
-		this.firstPersonControls.update();
-		// this.spaceship.update();
+
+		if (FirstPersonControlsMode) {
+			this.firstPersonControls.update();
+		} else {
+			this.spaceship.update();
+		}
+
 		this.inputTracker.update();
 	}
 
