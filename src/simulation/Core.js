@@ -109,8 +109,8 @@ export default class Core {
 		this.logger.update();
 
 		if (!FirstPersonControlsMode) {
-			this.logger.log("W - acceleration");
 			this.logger.log("←↑↓→ - steering");
+			this.logger.log("W - acceleration");
 			this.logger.log("Space - turbo mode");
 			this.logger.log();
 		}

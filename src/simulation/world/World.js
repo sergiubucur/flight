@@ -12,7 +12,6 @@ export default class World {
 	scene = null;
 	dirLight1 = null;
 	dirLight2 = null;
-	groundMesh = null;
 	heightmap = null;
 	lightRotation = 0;
 
@@ -36,34 +35,16 @@ export default class World {
 		this.dirLight2.position.copy(DirLightVector2).normalize();
 		this.scene.add(this.dirLight2);
 
-		this.groundMesh = this.getGroundMesh();
-		this.scene.add(this.groundMesh);
+		const groundMesh = this.getGroundMesh();
 
 		for (let x = -1; x < 2; x++) {
 			for (let y = -1; y < 2; y++) {
-				if (x === 0 && y === 0) {
-					continue;
-				}
-
-				const mesh = this.groundMesh.clone();
+				const mesh = groundMesh.clone();
 				mesh.position.set(x * Constants.WorldSize, 0, y * Constants.WorldSize);
 
 				this.scene.add(mesh);
 			}
 		}
-
-		// for (let x = -4; x < 5; x++) {
-		// 	for (let y = -4; y < 5; y++) {
-		// 		if (x !== -4 && x !== 4 && y !== -4 && y !== 4) {
-		// 			continue;
-		// 		}
-
-		// 		const mesh = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshPhongMaterial());
-		// 		mesh.position.set(x * 16, 17, y * 16);
-
-		// 		this.scene.add(mesh);
-		// 	}
-		// }
 	}
 
 	update() {

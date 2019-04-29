@@ -161,7 +161,7 @@ export default class Spaceship {
 			THREE.Math.degToRad(this.meshRotationZOffset * 2),
 			"YXZ");
 
-		const glow = this.velocity / MaxVelocity;
+		const glow = THREE.Math.clamp(this.velocity / MaxVelocity, 0.25, 1);
 		this.glowMaterial.emissive.setRGB(glow, glow, glow);
 
 		this.updateCameraPosition();
