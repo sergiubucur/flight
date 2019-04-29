@@ -6,6 +6,7 @@ import Constants from "../Constants";
 const WorldHalfSize = Constants.WorldSize / 2;
 const CameraOffset = new THREE.Vector3(0, 2.5, 5);
 const RotationOffsetMax = 15;
+const MaxVelocity = 0.55;
 
 export default class Spaceship {
 	camera = null;
@@ -14,6 +15,7 @@ export default class Spaceship {
 	world = null;
 
 	mesh = null;
+	glowMaterial = null;
 	position = new THREE.Vector3(0, 0, 0);
 	velocity = 0;
 	acceleration = 0;
@@ -32,6 +34,7 @@ export default class Spaceship {
 
 	init() {
 		this.mesh = this.getMesh();
+		this.glowMaterial = this.mesh.children[0].material[4];
 
 		this.reset();
 	}
@@ -50,8 +53,6 @@ export default class Spaceship {
 	getMesh() {
 		const mesh = this.assetLibrary.meshes["spaceship"].clone();
 		mesh.scale.set(0.1, 0.1, 0.1);
-
-		mesh.children[0].material[4].emissive.set(0xffffff);
 
 		return mesh;
 	}
@@ -144,6 +145,9 @@ export default class Spaceship {
 			THREE.Math.degToRad(this.rotationY),
 			THREE.Math.degToRad(this.meshRotationZOffset * 2),
 			"YXZ");
+
+		const glow = this.velocity / MaxVelocity;
+		this.glowMaterial.emissive.setRGB(glow, glow, glow);
 
 		this.updateCameraPosition();
 	}
