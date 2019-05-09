@@ -130,6 +130,8 @@ export default class Core {
 			this.logger.log("W - Acceleration");
 			this.logger.log("Space - Turbo Mode");
 			this.logger.log();
+			this.logger.log("Alt + Shift + 4 - First Person Mode");
+			this.logger.log();
 		}
 
 		this.world.update();

@@ -4,12 +4,15 @@
   "private": true,
   "homepage": "https://sergiubucur.github.io/flight",
   "dependencies": {
+    "gh-pages": "^2.0.1",
     "query-string": "^6.5.0",
     "react": "^16.8.6",
     "react-scripts": "3.0.0",
     "three": "^0.104.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
