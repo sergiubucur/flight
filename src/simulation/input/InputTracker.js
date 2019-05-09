@@ -1,6 +1,9 @@
 export default class InputTracker {
 	logger = null;
 	keysPressed = {};
+	ctrl = false;
+	alt = false;
+	shift = false;
 	movementX = 0;
 	movementY = 0;
 	usePointerLock = false;
@@ -16,10 +19,18 @@ export default class InputTracker {
 
 		document.addEventListener("keydown", (e) => {
 			this.keysPressed[e.keyCode] = true;
+
+			this.ctrl = e.ctrlKey;
+			this.alt = e.altKey;
+			this.shift = e.shiftKey;
 		});
 
 		document.addEventListener("keyup", (e) => {
 			this.keysPressed[e.keyCode] = false;
+
+			this.ctrl = e.ctrlKey;
+			this.alt = e.altKey;
+			this.shift = e.shiftKey;
 		});
 
 		if (this.usePointerLock) {
@@ -48,7 +59,6 @@ export default class InputTracker {
 	update() {
 		if (this.usePointerLock) {
 			if (document.pointerLockElement === null) {
-				this.logger.log();
 				this.logger.log("right-click for pointer lock");
 			}
 		}

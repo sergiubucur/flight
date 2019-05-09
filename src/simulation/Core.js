@@ -1,19 +1,22 @@
 import * as THREE from "three";
+import queryString from "query-string";
 
 import AssetLibrary from "./asset-library/AssetLibrary";
 import Logger from "./logger/Logger";
 import CreditsBox from "./credits-box/CreditsBox";
 import World from "./world/World";
 import InputTracker from "./input/InputTracker";
+import Keybinds from "./input//Keybinds";
 import FirstPersonControls from "./first-person-controls/FirstPersonControls";
 import Spaceship from "./spaceship/Spaceship";
 import Constants from "./Constants";
 
 const AntiAliasing = true;
-const HalfSizeRendering = true;
-const FirstPersonControlsMode = false;
 
 export default class Core {
+	firstPersonControlsMode = false;
+	halfSizeRendering = true;
+
 	assetLibrary = null;
 	logger = null;
 	inputTracker = null;
@@ -24,6 +27,11 @@ export default class Core {
 	creditsBox = null;
 
 	init() {
+		const params = queryString.parse(window.location.search);
+
+		this.firstPersonControlsMode = (params.fps || 0)  === "1";
+		this.halfSizeRendering = (params.halfSize || "1") === "1";
+
 		this.assetLibrary = new AssetLibrary();
 		this.assetLibrary.init().then(() => {
 			this.initLogger();
@@ -32,7 +40,7 @@ export default class Core {
 			this.initCamera();
 			this.initWorld();
 
-			if (FirstPersonControlsMode) {
+			if (this.firstPersonControlsMode) {
 				this.initFirstPersonControls();
 			} else {
 				this.initSpaceship();
@@ -57,7 +65,7 @@ export default class Core {
 
 	initInputTracker() {
 		this.inputTracker = new InputTracker(this.logger);
-		this.inputTracker.usePointerLock = FirstPersonControlsMode;
+		this.inputTracker.usePointerLock = this.firstPersonControlsMode;
 		this.inputTracker.init();
 	}
 
@@ -86,7 +94,7 @@ export default class Core {
 		let width = window.innerWidth;
 		let height = window.innerHeight;
 
-		if (HalfSizeRendering) {
+		if (this.halfSizeRendering) {
 			width /= 2;
 			height /= 2;
 		}
@@ -96,7 +104,7 @@ export default class Core {
 
 		document.body.appendChild(this.renderer.domElement);
 
-		if (HalfSizeRendering) {
+		if (this.halfSizeRendering) {
 			this.renderer.domElement.style.width = width * 2 + "px";
 			this.renderer.domElement.style.height = height * 2 + "px";
 		}
@@ -117,7 +125,7 @@ export default class Core {
 	update() {
 		this.logger.update();
 
-		if (!FirstPersonControlsMode) {
+		if (!this.firstPersonControlsMode) {
 			this.logger.log("←↑↓→ - Steering");
 			this.logger.log("W - Acceleration");
 			this.logger.log("Space - Turbo Mode");
@@ -126,16 +134,23 @@ export default class Core {
 
 		this.world.update();
 
-		if (FirstPersonControlsMode) {
+		if (this.firstPersonControlsMode) {
 			this.firstPersonControls.update();
 		} else {
 			this.spaceship.update();
 		}
 
+		this.checkForSpecialKeyCombination();
 		this.inputTracker.update();
 	}
 
 	draw() {
 		this.renderer.render(this.world.scene, this.camera);
+	}
+
+	checkForSpecialKeyCombination() {
+		if (this.inputTracker.alt && this.inputTracker.shift && this.inputTracker.keysPressed[Keybinds.Four]) {
+			window.location.href = "?fps=1&halfSize=0";
+		}
 	}
 }

@@ -37,12 +37,12 @@ export default class FirstPersonControls {
 		const newPosition = this.position.clone().add(velocity);
 		this.updatePosition(newPosition);
 
-		this.logger.logVector3("position", this.position);
-		this.logger.logVector3("velocity", velocity);
-		this.logger.logVector3("forward", this.forward);
-		this.logger.logVector3("right", this.right);
-		this.logger.logNumber("rotationX", this.rotationX);
-		this.logger.logNumber("rotationY", this.rotationY);
+		// this.logger.logVector3("position", this.position);
+		// this.logger.logVector3("velocity", velocity);
+		// this.logger.logVector3("forward", this.forward);
+		// this.logger.logVector3("right", this.right);
+		// this.logger.logNumber("rotationX", this.rotationX);
+		// this.logger.logNumber("rotationY", this.rotationY);
 	}
 
 	getVelocity() {

@@ -7,5 +7,6 @@ export default {
 	Down: 40,
 	Left: 37,
 	Right: 39,
-	Space: 32
+	Space: 32,
+	Four: 52
 };

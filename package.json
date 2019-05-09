@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://sergiubucur.github.io/flight",
   "dependencies": {
+    "query-string": "^6.5.0",
     "react": "^16.8.6",
     "react-scripts": "3.0.0",
     "three": "^0.104.0"
