@@ -1,0 +1,11 @@
+{
+  "files": {
+    "main.css": "/flight/static/css/main.fbfdb650.chunk.css",
+    "main.js": "/flight/static/js/main.678770f4.chunk.js",
+    "runtime~main.js": "/flight/static/js/runtime~main.0139e3eb.js",
+    "static/js/2.3732e362.chunk.js": "/flight/static/js/2.3732e362.chunk.js",
+    "index.html": "/flight/index.html",
+    "precache-manifest.ce1eb3d7447f8c61623a58f2ad1215de.js": "/flight/precache-manifest.ce1eb3d7447f8c61623a58f2ad1215de.js",
+    "service-worker.js": "/flight/service-worker.js"
+  }
+}
