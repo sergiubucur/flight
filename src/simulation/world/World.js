@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import queryString from "query-string";
 
 import Constants from "../Constants";
 
@@ -11,6 +12,8 @@ const FogStart = Constants.DrawDistance / 2;
 const FogEnd = Constants.DrawDistance;
 
 export default class World {
+	flatShading = true;
+
 	assetLibrary = null;
 	scene = null;
 	dirLight1 = null;
@@ -24,6 +27,10 @@ export default class World {
 	}
 
 	init() {
+		const params = queryString.parse(window.location.search);
+
+		this.flatShading = (params.flat || "1") === "1";
+
 		this.initHeightmap();
 
 		this.scene = new THREE.Scene();
@@ -104,7 +111,10 @@ export default class World {
 			}
 		}
 
-		// geometry.mergeVertices();
+		if (!this.flatShading) {
+			geometry.mergeVertices();
+		}
+
 		geometry.computeVertexNormals();
 
 		const bufferGeometry = new THREE.BufferGeometry().fromGeometry(geometry);

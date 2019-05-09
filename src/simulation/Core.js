@@ -29,7 +29,7 @@ export default class Core {
 	init() {
 		const params = queryString.parse(window.location.search);
 
-		this.firstPersonControlsMode = (params.fps || 0)  === "1";
+		this.firstPersonControlsMode = (params.fps || 0) === "1";
 		this.halfSizeRendering = (params.halfSize || "1") === "1";
 
 		this.assetLibrary = new AssetLibrary();
@@ -150,7 +150,7 @@ export default class Core {
 
 	checkForSpecialKeyCombination() {
 		if (this.inputTracker.alt && this.inputTracker.shift && this.inputTracker.keysPressed[Keybinds.Four]) {
-			window.location.href = "?fps=1&halfSize=0";
+			window.location.href = "?fps=1&halfSize=0&flat=0";
 		}
 	}
 }
